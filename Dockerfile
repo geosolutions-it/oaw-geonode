@@ -39,8 +39,8 @@ RUN chmod +x /usr/src/oaw_geonode/tasks.py \
 
 # Prepraing dependencies
 RUN apt-get update && apt-get install -y devscripts build-essential debhelper pkg-kde-tools sharutils
-RUN git clone https://salsa.debian.org/debian-gis-team/proj.git /tmp/proj
-RUN cd /tmp/proj && debuild -i -us -uc -b && dpkg -i ../*.deb
+#RUN git clone https://salsa.debian.org/debian-gis-team/proj.git /tmp/proj
+#RUN cd /tmp/proj && debuild -i -us -uc -b && dpkg -i ../*.deb
 
 # Install pip packages
 RUN pip install pip --upgrade
@@ -49,6 +49,10 @@ RUN pip install --upgrade --no-cache-dir --src /usr/src -r requirements.txt \
     && pip install flower==0.9.4
 
 RUN pip install --upgrade -e .
+# Activate "memcached"
+RUN apt install memcached
+RUN pip install pylibmc \
+    && pip install sherlock
 
 # Install "geonode-contribs" apps
 RUN cd /usr/src; git clone https://github.com/GeoNode/geonode-contribs.git -b master
@@ -56,4 +60,4 @@ RUN cd /usr/src; git clone https://github.com/GeoNode/geonode-contribs.git -b ma
 RUN cd /usr/src/geonode-contribs/geonode-logstash; pip install --upgrade -e . \
 	cd /usr/src/geonode-contribs/ldap; pip install --upgrade -e .
 
-ENTRYPOINT service cron restart && /usr/src/oaw_geonode/entrypoint.sh
+ENTRYPOINT service cron restart && service memcached restart && /usr/src/oaw_geonode/entrypoint.sh
