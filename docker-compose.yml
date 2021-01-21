@@ -90,7 +90,9 @@ services:
     env_file:
       - .env
     environment:
-      CELERY_CMD: celery beat --app=geonode.celery_app:app -l DEBUG -f /var/log/celery.log
+      # upgrade to geonode 3.2.0.unstable
+      #CELERY_CMD: celery beat --app=geonode.celery_app:app -l DEBUG -f /var/log/celery.log
+      CELERY_CMD: celery -A geonode.celery_app:app worker --without-gossip --without-mingle -Ofair -B -E --statedb=/mnt/volumes/statics/worker.state -s /mnt/volumes/statics/celerybeat-schedule --loglevel=INFO --concurrency=10 -n worker1@%h -f /var/log/celery.log
       IS_CELERY: 'True'
 
   # - Uncomment to enable celery monitor
