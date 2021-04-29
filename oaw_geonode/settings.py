@@ -141,3 +141,5 @@ if LDAP_ENABLED and 'geonode_ldap' not in INSTALLED_APPS:
 
 # Add your specific LDAP configuration after this comment:
 # https://docs.geonode.org/en/master/advanced/contrib/#configuration
+
+METADATA_PARSERS = ['oaw_geonode.metadata.xml_parser']
