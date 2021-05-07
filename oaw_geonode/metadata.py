@@ -6,7 +6,7 @@ from datetime import datetime
 
 def xml_parser(xml, uuid="", vals={}, regions=[], keywords=[], custom={}):
     try:
-        set_metadata(xml, uuid, vals, regions, keywords, custom)
+        uuid, vals, regions, keywords, custom = set_metadata(xml, uuid, vals, regions, keywords, custom)
     except:
         vals, keywords = custom_parsing(xml, vals, keywords)
     return uuid, vals, regions, keywords, custom
