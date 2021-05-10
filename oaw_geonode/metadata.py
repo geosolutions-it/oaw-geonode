@@ -2,13 +2,14 @@ from geonode.layers.metadata import set_metadata
 from owslib.etree import etree
 from geonode.layers.metadata import convert_keyword
 from datetime import datetime
+from geonode.base.models import HierarchicalKeyword
 
 
 def xml_parser(xml, uuid="", vals={}, regions=[], keywords=[], custom={}):
     try:
         uuid, vals, regions, keywords, custom = set_metadata(xml, uuid, vals, regions, keywords, custom)
     except:
-        vals, keywords = custom_parsing(xml, vals, keywords)
+        vals, keywords, custom = custom_parsing(xml, vals, keywords)
     return uuid, vals, regions, keywords, custom
 
 
@@ -37,4 +38,23 @@ def custom_parsing(xml, vals, keywords):
     for kw in exml.findall("keywords"):
         kws = [k.text for k in kw.findall("item")]
     keywords = convert_keyword(kws or [])
-    return vals, keywords
+    return vals, keywords, keywords
+
+
+def storer(layer, custom):
+    geotiff, _ = HierarchicalKeyword.objects.get_or_create(name='GeoTIFF')
+    valid_keywords = [geotiff]
+    invalid_keywords = []
+    for k in layer.keywords.all():
+        if k.name in custom[0]['keywords']:
+            valid_keywords.append(k)
+        else:
+            invalid_keywords.append(k)
+
+    setattr(layer, 'keywords', valid_keywords)
+
+    for invalid_k in invalid_keywords:
+        k = HierarchicalKeyword.objects.get(name=invalid_k)
+        k.delete()
+
+    return layer
