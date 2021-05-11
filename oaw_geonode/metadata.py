@@ -43,12 +43,15 @@ def custom_parsing(xml, vals, keywords):
     Check if the keywords extracted from the XML are available in GeoNode.
     If the keyword is not available in GeoNode, is ignored
     '''
-    valid_keywords = ['GeoTiff']
+    valid_keywords = []
 
     for k in kws:
         is_available = HierarchicalKeyword.objects.filter(name=k).exists()
         if is_available:
             valid_keywords.append(k)
+
+    if len(valid_keywords) == 0:
+        valid_keywords.append('GeoTIFF')
 
     keywords = convert_keyword(valid_keywords or [])
     return vals, keywords, keywords
