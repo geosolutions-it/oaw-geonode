@@ -34,27 +34,36 @@ def custom_parsing(xml, vals, keywords):
         else None,
         "typename": exml.find("typename").text if exml.find("typename") is not None else None,
     }
+
     kws = []
     for kw in exml.findall("keywords"):
         kws = [k.text for k in kw.findall("item")]
-    keywords = convert_keyword(kws or [])
+
+    '''
+    Check if the keywords extracted from the XML are available in GeoNode.
+    If the keyword is not available in GeoNode, is ignored
+    '''
+    valid_keywords = ['GeoTiff']
+
+    for k in kws:
+        is_available = HierarchicalKeyword.objects.filter(name=k).exists()
+        if is_available:
+            valid_keywords.append(k)
+
+    keywords = convert_keyword(valid_keywords or [])
     return vals, keywords, keywords
 
 
 def storer(layer, custom):
-    geotiff, _ = HierarchicalKeyword.objects.get_or_create(name='GeoTIFF')
-    valid_keywords = [geotiff]
-    invalid_keywords = []
-    for k in layer.keywords.all():
-        if k.name in custom[0]['keywords']:
-            valid_keywords.append(k)
-        else:
-            invalid_keywords.append(k)
-
-    setattr(layer, 'keywords', valid_keywords)
-
-    for invalid_k in invalid_keywords:
-        k = HierarchicalKeyword.objects.get(name=invalid_k)
-        k.delete()
+    '''
+    Set as invalid all the keywords assigned to the layer that are not available in
+    the keywords extracted from the XML.
+    Deleting the Keywords that are invalid, since we want to have a specific
+    set of keywords in GeoNode. The keywords automatically generated are deleted
+    '''
+    for lk in layer.keywords.all():
+        if not lk.name in custom[0]['keywords']:
+            k = HierarchicalKeyword.objects.get(name=lk.name)
+            k.delete()
 
     return layer
