@@ -2,75 +2,180 @@
 {% load markdownify %}
 {% load i18n %}
 {% load base_tags %}
+{% load avatar_tags %}
 {% comment %}
 This is where you can override the hero area block. You can simply modify the content below or replace it wholesale to meet your own needs.
 {% endcomment %}
+
+{% block extra_head %}
+      <link href="{{ STATIC_URL }}css/site_base.css" rel="stylesheet"/>
+{% endblock %}
+
 {% block hero %}
-{% if custom_theme.welcome_theme == 'JUMBOTRON_BG' or not slides %}
 <div class="jumbotron">
   <div class="container">
-    {% with jumbotron_welcome_title=custom_theme.jumbotron_welcome_title|default:"Welcome"|template_trans %}
-    <h1>{% trans jumbotron_welcome_title %}</h1>
-    {% endwith %}
-    <p></p>
-    {% with jumbotron_welcome_content=custom_theme.jumbotron_welcome_content|default:"GeoNode is an open source platform for sharing geospatial data and maps."|template_trans %}
-    <p>{% trans jumbotron_welcome_content %}</p>
-    {% endwith %}
-    {% if not custom_theme.jumbotron_cta_hide %}
+    <h1>{% trans "Welcome" %}</h1>
+    <p>{% trans "Historical Geodata, Old Maps and Views" %}</p>
     <p><a class="btn btn-default btn-lg" target="_blank"
-        href="{{custom_theme.jumbotron_cta_link|default:_("https://docs.geonode.org/en/master/usage/index.html")}}"
-        role="button">{{custom_theme.jumbotron_cta_text|default:_("Get Started &raquo;")}}</a></p>
-    {% endif %}
+      href="https://docs.geonode.org/en/master/usage/index.html"
+      role="button">{% trans "Get Started &raquo;" %}</a></p>
   </div>
 </div>
-{% else %}
-<div class="geonode-slide-show">
-  <div class="jumbotron jumbotron--no_bg">
-    <div class="container">
-      <div id="myCarousel" class="carousel slide" data-ride="carousel">
-        <!-- Indicators -->
-        {% if slides.count > 1%}
-        <ol class="carousel-indicators">
-          {% for slide in slides %}
-          <li data-target="#myCarousel" data-slide-to="{{ forloop.counter | add:'-1' }}"
-            class="{% if forloop.counter == 1 %}active{%endif%}"></li>
-          {% endfor %}
-        </ol>
+
+{% endblock hero %}
+
+
+<!-- Navbar -->
+{% block header %}
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+  <div class="nav-container">
+    <div class="navbar-header">
+    <a class="navbar-client-name" href="{% url "home" %}">{% trans "Woldan Collection-HGIS" %}</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav toolbar">
+      {% block tabs %}
+
+      <li id="nav_layers">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{% trans "Data" %}<i class="fa fa-angle-down fa-lg"></i></a>
+        <ul class="dropdown-menu">
+          <li><a href="{% url "layer_browse" %}?limit={{ CLIENT_RESULTS_LIMIT }}">{% trans "Layers" %}</a></li>
+          <li><a href="{% url "document_browse" %}?limit={{ CLIENT_RESULTS_LIMIT }}">{% trans "Documents" %}</a></li>
+          <li><a href="{% url "services" %}?limit={{ CLIENT_RESULTS_LIMIT }}">{% trans "Remote Services" %}</a></li>
+          {% if user.is_authenticated and not READ_ONLY_MODE %}
+              <li role="separator" class="divider"></li>
+              <li><a href="{% url "layer_upload" %}">{% trans "Upload Layer" %}</a></li>
+              {% if USE_GEOSERVER and CREATE_LAYER %}
+                  <li><a href="{% url "layer_create" %}">{% trans "Create Layer" %}</a></li>
+              {% endif %}
+              <li><a href="{% url "document_upload" %}">{% trans "Upload Document" %}</a></li>
+          {% endif %}
+          {% if user.is_superuser or user.is_staff %}
+            {%  if not READ_ONLY_MODE %}
+              <li><a href="{% url "register_service" %}">{% trans "Add Remote Service" %}</a></li>
+            {% endif %}
+          {% endif %}
+        </ul>
+      </li>
+      <li id="nav_maps">
+        {% if user.is_authenticated %}
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{% trans "Maps" %}<i class="fa fa-angle-down fa-lg"></i></a>
+          <ul class="dropdown-menu">
+            <li><a href="{% url "maps_browse" %}?limit={{ CLIENT_RESULTS_LIMIT }}">{% trans "Explore Maps" %}</a></li>
+            {% if not READ_ONLY_MODE %}
+              <li> <a href="{% url "new_map" %}">{% trans "Create Map" %}</a></li>
+            {% endif %}
+          </ul>
+        {% else %}
+          <a href="{% url "maps_browse" %}?limit={{ CLIENT_RESULTS_LIMIT }}">{% trans "Maps" %}</a>
         {% endif %}
-        {% with jumbotron_welcome_title=custom_theme.jumbotron_welcome_title|default:"Welcome"|template_trans %}
-        <h1 class="carousel-header">{% trans jumbotron_welcome_title %}</h1>
-        {% endwith %}
-        <!-- Wrapper for slides -->
-        <div class="carousel-inner" role="listbox">
-          {% for slide in slides %}
-          <div class="item {% if forloop.counter == 1 %}active{%endif%}">
-            {% if slide.jumbotron_slide_image %}
-            <img src="{{ slide.jumbotron_slide_image_thumbnail.url }}" alt="{{ slide.slide_name }}">
-            {% endif %}
-            {% if not slide.hide_jumbotron_slide_content %}
-            <div class="carousel-caption">
-              {% with jumbotron_slide_content=slide.jumbotron_slide_content|markdownify %}
-              {% trans jumbotron_slide_content %}
-              {% endwith %}
-            </div>
-            {% endif %}
+      </li>
+      {% if GEONODE_APPS_ENABLE and GEONODE_APPS_NAV_MENU_ENABLE %}
+      <li id="nav_maps">
+        {% if user.is_authenticated %}
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{% blocktrans %}{{GEONODE_APPS_NAME}}{% endblocktrans %}<i class="fa fa-angle-down fa-lg"></i></a>
+        <ul class="dropdown-menu">
+            <li><a href="{% url "apps_browse" %}?limit={{ CLIENT_RESULTS_LIMIT }}">{% trans "Explore" %} {% blocktrans %}{{GEONODE_APPS_NAME}}{% endblocktrans %}</a></li>
+          </ul>
+        {% else %}
+        <a href="{% url "apps_browse" %}?limit={{ CLIENT_RESULTS_LIMIT }}">{% blocktrans %}{{GEONODE_APPS_NAME}}{% endblocktrans %}</a>
+        {% endif %}
+      </li>
+      {% endif %}
+      <li>
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{% trans "About" %}<i class="fa fa-angle-down fa-lg"></i></a>
+        <ul class="dropdown-menu">
+          <li><a href="{% url "profile_browse" %}">{% trans "People" %}</a></li>
+          <li><a href="{% url "group_list" %}">{% trans "Groups" %}</a></li>
+          <li><a href="{% url "group_category_list" %}">{% trans "Group Categories" %}</a></li>
+          {% if perms.announcements.can_manage %}
+            <li><a href="{% url "announcements_list" %}">{% trans "Announcements" %}</a></li>
+          {% endif %}
+          {% if user.is_authenticated and not READ_ONLY_MODE %}
+            <li role="separator" class="divider"></li>
+            <li><a href="{% url "geonode.invitations:geonode-send-invite" %}">{% trans "Invite Users" %}</a></li>
+          {% endif %}
+          {% if user.is_superuser and not READ_ONLY_MODE %}
+            <li><a href="{% if SITEURL|default:""|slice:"-1:" == "/" %}{{SITEURL}}{% else %}{{SITEURL}}/{% endif %}admin/people/profile/add/">{% trans "Add User" %}</a></li>
+            <li><a href="{% url "group_create" %}">{% trans "Create Group" %}</a></li>
+          {% endif %}
+        </ul>
+      </li>
+
+      {% endblock %}
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+
+        {% block my_extra_right_tab %}
+          {% render_nav_menu 'TOPBAR_MENU' %}
+        {% endblock my_extra_right_tab %}
+
+        <li>
+          <div class="search">
+            <form id="search" action="{% url "search" %}" >
+              <span class="fa fa-search"></span>
+              <div id="search-container" class="autocomplete-input">
+                {% if HAYSTACK_SEARCH %}
+                <input autocomplete="off" id="search_input" type="text" placeholder="{% trans 'Search' %}" name="q">
+                <input type="hidden" name="abstract__icontains" id="search_abstract_input" placeholder="{% trans 'Search' %}" >
+                <input type="hidden" name="purpose__icontains" id="search_purpose_input" placeholder="{% trans 'Search' %}" >
+                <input type="hidden" name="f_method" id="filtering_type" value="or" >
+                {% else %}
+                <input autocomplete="off" type="text" name="title__icontains" id="search_input" placeholder="{% trans 'Search' %}" >
+                <input type="hidden" name="abstract__icontains" id="search_abstract_input" placeholder="{% trans 'Search' %}" >
+                <input type="hidden" name="purpose__icontains" id="search_purpose_input" placeholder="{% trans 'Search' %}" >
+                <input type="hidden" name="f_method" id="filtering_type" value="or" >
+                {% endif %}
+              </div>
+            </form>
           </div>
-          {% endfor %}
-        </div>
-        <!-- Left and right controls -->
-        {% if slides.count > 1%}
-        <a class="left carousel-control" href="#myCarousel" data-slide="prev">
-          <span class="glyphicon glyphicon-chevron-left"></span>
-          <span class="sr-only">Previous</span>
-        </a>
-        <a class="right carousel-control" href="#myCarousel" data-slide="next">
-          <span class="glyphicon glyphicon-chevron-right"></span>
-          <span class="sr-only">Next</span>
-        </a>
+        </li>
+        {% if not user.is_authenticated and ACCOUNT_OPEN_SIGNUP and not READ_ONLY_MODE %}
+        <li><a href="{% url "account_signup" %}">{% trans "Register" %}</a></li>
         {% endif %}
-      </div>
+        {% if user.is_authenticated %}
+        <li>
+          <a href="#" class="dropdown-toggle avatar" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            {% autoescape off %}{% avatar user 40 %}{% endautoescape %}
+            {% with full_name=user.first_name|add:' '|add:user.last_name %}
+              {% if full_name.strip %}
+                {{ full_name | truncatechars:20 }}
+              {% else %}
+                {{ user.username | truncatechars:20 }}
+              {% endif %}
+            {% endwith %}
+            <i class="fa fa-angle-down fa-lg"></i>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a href="{{ user.get_absolute_url }}">{% trans "Profile" %}</a></li>
+            <li><a href="{% url "recent-activity" %}">{% trans "Recent Activity" %}</a></li>
+            {% if FAVORITE_ENABLED and user.is_authenticated %}
+            <li><a href="{% url "favorite_list" %}">{% trans "Favorites" %}</a></li>
+            {% endif %}
+            <li><a href="{% url "messages_inbox" %}">{% trans "Inbox" %}</a></li>
+            {% if user.is_superuser or user.is_staff %}
+                <li role="separator" class="divider"></li>
+                <li><a href="{% url "admin:index" %}">{% trans "Admin" %}</a></li>
+                {% if 'geonode.geoserver' in INSTALLED_APPS %}
+                <li><a href="{{ OGC_SERVER.default.WEB_UI_LOCATION }}">GeoServer</a></li>
+                {% endif %}
+                {% if USE_MONITORING %}
+                <li role="separator" class="divider"></li>
+                <li><a href="{% url "monitoring:index" %}">{% trans "Monitoring & Analytics" %}</a></li>
+                {% endif %}
+            {% endif %}
+            <li role="separator" class="divider"></li>
+            <li><a href="{% url "help" %}">{% trans "Help" %}</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="{% if SITEURL|default:""|slice:"-1:" == "/" %}{{SITEURL}}{% else %}{{SITEURL}}/{% endif %}account/logout/">{% trans "Log out" %}</a></li>
+          </ul>
+        </li>
+        {% else %}
+        <li><a href="#" data-toggle="modal" data-target="#SigninModal" role="button" >{% trans "Sign in" %} </a></li>
+        {% endif %}
+      </ul>
     </div>
   </div>
-</div>
-{% endif %}
-{% endblock hero %}
+</nav>
+{% endblock header %}
+<!-- End of Navbar -->

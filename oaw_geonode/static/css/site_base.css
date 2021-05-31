@@ -1,0 +1,8 @@
+.navbar-client-name {
+    color: white;
+    font-size: xx-large;
+}
+.navbar-header a:hover, a:focus {
+    color: white;
+    text-decoration: none;
+}
