@@ -1,0 +1,28 @@
+{% extends "layers/layer_detail.html" %}
+
+{% block extra_head %}
+{{ block.super }}
+<style>
+    .btn-primary {
+        color: #fff;
+        background-color: #0047BB;
+        border-color: #0047BB;
+    }
+    .btn-primary:hover {
+        color: #fff;
+        background-color: #0047BB;
+        border-color: #0047BB;
+    }
+
+</style>
+{% endblock %}
+
+{% block extra_script %}
+{{ block.super }}
+<script type="text/javascript">
+    $(function() {
+        var moreInfo = document.getElementsByClassName('more')[0];
+        moreInfo.classList.add("in")
+    });
+</script>
+{% endblock %}
