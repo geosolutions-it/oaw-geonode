@@ -141,3 +141,18 @@ if LDAP_ENABLED and 'geonode_ldap' not in INSTALLED_APPS:
 
 # Add your specific LDAP configuration after this comment:
 # https://docs.geonode.org/en/master/advanced/contrib/#configuration
+
+SEARCH_FILTERS = {
+    'TEXT_ENABLED': True,
+    'TYPE_ENABLED': True,
+    'CATEGORIES_ENABLED': True,
+    'OWNERS_ENABLED': False,
+    'KEYWORDS_ENABLED': True,
+    'H_KEYWORDS_ENABLED': True,
+    'T_KEYWORDS_ENABLED': True,
+    'DATE_ENABLED': True,
+    'REGION_ENABLED': True,
+    'EXTENT_ENABLED': True,
+    'GROUPS_ENABLED': False,
+    'GROUP_CATEGORIES_ENABLED': False,
+}
