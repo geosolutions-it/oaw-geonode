@@ -55,6 +55,11 @@ WSGI_APPLICATION = "{}.wsgi.application".format(PROJECT_NAME)
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = os.getenv('LANGUAGE_CODE', "en")
 
+DISPLAY_COMMENTS = ast.literal_eval(os.getenv('DISPLAY_COMMENTS', 'False'))
+DISPLAY_RATINGS = ast.literal_eval(os.getenv('DISPLAY_RATINGS', 'False'))
+
+ACCOUNT_OPEN_SIGNUP = ast.literal_eval(os.environ.get('ACCOUNT_OPEN_SIGNUP', 'False'))
+
 _DEFAULT_LANGUAGES = (
     ('en','English'),
     ('de','German')
