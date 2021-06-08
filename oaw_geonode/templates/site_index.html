@@ -5,15 +5,34 @@
 {% comment %}
 This is where you can override the hero area block. You can simply modify the content below or replace it wholesale to meet your own needs.
 {% endcomment %}
+
+{% block extra_head %}
+{{ block.super }}
+<style>
+  .home .geonode-slide-show .jumbotron .container .carousel-caption {
+    text-align: center;
+  }
+  .home .geonode-slide-show .jumbotron .container .carousel-caption p {
+    padding-bottom: 15px;
+    font-size: 50px;
+  }
+  .home .geonode-slide-show .jumbotron .container .carousel-header {
+    text-align: center;
+    left: 3em;
+    right: 3em;
+  }
+</style>
+{% endblock %}
+
 {% block hero %}
 {% if custom_theme.welcome_theme == 'JUMBOTRON_BG' or not slides %}
 <div class="jumbotron">
   <div class="container">
-    {% with jumbotron_welcome_title=custom_theme.jumbotron_welcome_title|default:"Welcome"|template_trans %}
+    {% with jumbotron_welcome_title=custom_theme.jumbotron_welcome_title|default:"Woldan Collection-HGIS"|template_trans %}
     <h1>{% trans jumbotron_welcome_title %}</h1>
     {% endwith %}
     <p></p>
-    {% with jumbotron_welcome_content=custom_theme.jumbotron_welcome_content|default:"GeoNode is an open source platform for sharing geospatial data and maps."|template_trans %}
+    {% with jumbotron_welcome_content=custom_theme.jumbotron_welcome_content|default:"Historical Geodata, Old Maps and Views"|template_trans %}
     <p>{% trans jumbotron_welcome_content %}</p>
     {% endwith %}
     {% if not custom_theme.jumbotron_cta_hide %}
@@ -37,7 +56,7 @@ This is where you can override the hero area block. You can simply modify the co
           {% endfor %}
         </ol>
         {% endif %}
-        {% with jumbotron_welcome_title=custom_theme.jumbotron_welcome_title|default:"Welcome"|template_trans %}
+        {% with jumbotron_welcome_title=custom_theme.jumbotron_welcome_title|default:"Woldan Collection-HGIS"|template_trans %}
         <h1 class="carousel-header">{% trans jumbotron_welcome_title %}</h1>
         {% endwith %}
         <!-- Wrapper for slides -->
@@ -49,7 +68,7 @@ This is where you can override the hero area block. You can simply modify the co
             {% endif %}
             {% if not slide.hide_jumbotron_slide_content %}
             <div class="carousel-caption">
-              {% with jumbotron_slide_content=slide.jumbotron_slide_content|markdownify %}
+              {% with jumbotron_slide_content=slide.jumbotron_slide_content|default:"Historical Geodata, Old Maps and Views"|markdownify %}
               {% trans jumbotron_slide_content %}
               {% endwith %}
             </div>

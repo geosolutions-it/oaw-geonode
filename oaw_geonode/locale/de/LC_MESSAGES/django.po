@@ -1,0 +1,8 @@
+msgid "Woldan Collection-HGIS"
+msgstr "Sammlung Woldan-HGIS"
+
+msgid "Historical Geodata, Old Maps and Views"
+msgstr "Historische Geodaten, Altkarten und Ansichten"
+
+msgid "<p>Historical Geodata, Old Maps and Views</p>"
+msgstr "<p>Historische Geodaten, Altkarten und Ansichten</p>"
