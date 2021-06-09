@@ -1,12 +1,11 @@
 {% extends "base.html" %}
+{% load base_tags %}
 {% block extra_head %}
       <link href="{{ STATIC_URL }}css/site_base.css" rel="stylesheet"/>
 {% endblock %}
 {% block extra_tab %}
-{% comment %}
-Add Tab for Third Party Apps
-<li>
- <a href="{{ PROJECT_ROOT }}app">App</a>
-</li>
-{% endcomment %}
+{% render_nav_menu 'TOPBAR_MENU' %}
 {% endblock %}
+
+{% block my_extra_right_tab %}
+{% endblock my_extra_right_tab %}
