@@ -48,6 +48,45 @@ location /geoserver {
     proxy_pass http://$upstream;
 }
 
+# Airflow
+location /airflow {
+
+    # Using a variable is a trick to let Nginx start even if upstream host is not up yet
+    # (see https://sandro-keil.de/blog/2017/07/24/let-nginx-start-if-upstream-host-is-unavailable-or-down/)
+    proxy_pass http://airflow-webserver:8080/airflow/;
+    # set $upstream $HTTP_HOST$HTTPS_HOST:$JENKINS_HTTP_PORT;
+  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  proxy_set_header X-Forwarded-Host $host:$server_port;
+  proxy_set_header X-Forwarded-Server $host;
+  proxy_set_header X-Forwarded-Proto $scheme;
+  proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header Host $host;
+      proxy_redirect off;
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection "upgrade";
+}
+
+# Flower
+#location /flower {
+
+    rewrite ^/flower/(.*)$ /$1 break; 
+    # Using a variable is a trick to let Nginx start even if upstream host is not up yet
+    # (see https://sandro-keil.de/blog/2017/07/24/let-nginx-start-if-upstream-host-is-unavailable-or-down/)
+#    proxy_pass http://flower:5555/flower/;
+    # set $upstream $HTTP_HOST$HTTPS_HOST:$JENKINS_HTTP_PORT;
+#  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#  proxy_set_header X-Forwarded-Host $host:$server_port;
+#  proxy_set_header X-Forwarded-Server $host;
+#  proxy_set_header X-Forwarded-Proto $scheme;
+#  proxy_set_header X-Real-IP $remote_addr;
+#      proxy_set_header Host $host;
+#      proxy_redirect off;
+#      proxy_http_version 1.1;
+#      proxy_set_header Upgrade $http_upgrade;
+#      proxy_set_header Connection "upgrade";
+#}
+
 # Jenkins
 location /jenkins {
 
@@ -137,7 +176,7 @@ location / {
   proxy_set_header            X-Real-IP $remote_addr;
   proxy_set_header            X-Forwarded-For $proxy_add_x_forwarded_for;
   proxy_set_header            X-Forwarded-Host $server_name;
-  proxy_set_header            X-Forwarded-Proto $scheme;
+  proxy_set_header	      X-Forwarded-Proto $scheme;
 
   proxy_pass http://$upstream;
 
