@@ -33,6 +33,7 @@ def custom_parsing(xml, vals, keywords):
         if exml.find("data_quality_statement") is not None
         else None,
         "typename": exml.find("typename").text if exml.find("typename") is not None else None,
+        "is_published": exml.find("is_published").text if exml.find("is_published") is not None else False,
     }
 
     kws = []
