@@ -37,8 +37,8 @@ services:
       retries: 10
     environment:
       - IS_CELERY=False
-      - http_proxy: 'http://fifi.arz.oeaw.ac.at:8080'
-      - https_proxy: 'http://fifi.arz.oeaw.ac.at:8080'
+      - http_proxy="http://fifi.arz.oeaw.ac.at:8080"
+      - https_proxy="http://fifi.arz.oeaw.ac.at:8080"
     entrypoint: ["/usr/src/oaw_geonode4/entrypoint.sh"]
     command: "uwsgi --ini /usr/src/oaw_geonode4/uwsgi.ini"
 
