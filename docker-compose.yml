@@ -30,15 +30,15 @@ services:
       dockerfile: Dockerfile
     container_name: django4${COMPOSE_PROJECT_NAME}
     healthcheck:
-      test: "curl --fail --silent --write-out 'HTTP CODE : %{http_code}\n' --output /dev/null http://127.0.0.1:8001/"
+      test: "curl --fail https://hgis.woldan.oeaw.ac.at || exit 1"
       start_period: 60s
       interval: 60s
       timeout: 10s
-      retries: 10
+      retries: 2
     environment:
       - IS_CELERY=False
-      - http_proxy="http://fifi.arz.oeaw.ac.at:8080"
-      - https_proxy="http://fifi.arz.oeaw.ac.at:8080"
+      - http_proxy=http://fifi.arz.oeaw.ac.at:8080
+      - https_proxy=http://fifi.arz.oeaw.ac.at:8080
     entrypoint: ["/usr/src/oaw_geonode4/entrypoint.sh"]
     command: "uwsgi --ini /usr/src/oaw_geonode4/uwsgi.ini"
 
@@ -96,13 +96,16 @@ services:
     build: ./docker/geoserver/
     container_name: geoserver4${COMPOSE_PROJECT_NAME}
     healthcheck:
-      test: "curl --fail --silent --write-out 'HTTP CODE : %{http_code}\n' --output /dev/null http://127.0.0.1:8080/geoserver/ows"
+      test: "curl --fail https://hgis.woldan.oeaw.ac.at/geoserver/ows || exit 1"
       start_period: 60s
       interval: 60s
       timeout: 10s
-      retries: 10
+      retries: 2
     env_file:
       - .env
+    environment:
+      - http_proxy=http://fifi.arz.oeaw.ac.at:8080
+      - https_proxy=http://fifi.arz.oeaw.ac.at:8080
     ports:
       - "8080:8080"
     volumes:
