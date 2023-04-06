@@ -71,6 +71,7 @@ services:
       - "443:443"
     volumes:
       - nginx-confd:/etc/nginx
+      - ./docker/nginx/geonode.conf.envsubst:/etc/nginx/sites-enabled/geonode.conf.envsubst
       - nginx-certificates:/geonode-certificates
       - statics:/mnt/volumes/statics
     restart: on-failure
