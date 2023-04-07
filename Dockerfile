@@ -1,6 +1,9 @@
 FROM python:3.10.2-buster
 LABEL GeoNode development team
 
+ENV http_proxy=$http_proxy
+ENV https_proxy=$https_proxy
+
 RUN mkdir -p /usr/src/oaw_geonode4
 
 # Enable postgresql-client-13

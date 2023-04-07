@@ -1,5 +1,8 @@
 FROM nginx:1.23.3-alpine
 
+ENV http_proxy=$http_proxy
+ENV https_proxy=$https_proxy
+
 RUN apk add --no-cache openssl inotify-tools
 
 WORKDIR /etc/nginx/

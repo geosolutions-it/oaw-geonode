@@ -1,1 +1,4 @@
-docker-compose build --no-cache && docker-compose stop && docker-compose up -d && docker system prune -a
+export http_proxy=http://fifi.arz.oeaw.ac.at:8080
+export https_proxy=http://fifi.arz.oeaw.ac.at:8080
+
+docker-compose build
