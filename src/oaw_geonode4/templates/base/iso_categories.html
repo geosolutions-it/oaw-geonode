@@ -1,0 +1,37 @@
+{% load i18n %}
+{% if iso_formats %}
+    <section class="gn-container gn-container-home container">
+        <div class="gn-content">
+            <h2 class="gn-content-title">{% trans "Discover the available datasets." %}</h2>
+            <div class="iso-categories">
+                <ul class="iso-categories-list">
+                    {% for iso_format in iso_formats %}
+                    <li class="iso-categories-item">
+                        <a href="/catalogue/#/search/filter/?filter%7Bcategory.identifier.in%7D={{iso_format.category__identifier}}">
+                            <div
+                                class="category"
+                                data-toggle="tooltip"
+                                data-placement="auto"
+                                title="{% trans iso_format.category__description %}"
+                            >
+                                <div class="category-icon">
+                                    <i class="fa {{ iso_format.category__fa_class }} fa-3x">
+                                        <span class="badge">{{ iso_format.count }}</span>
+                                    </i>
+                                </div>
+                                <div>{% trans iso_format.category__gn_description %}</div>
+                            </div>
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <script>
+                window.addEventListener('DOMContentLoaded', function() {
+                    // enable bootstrap tooltips
+                    $('.iso-categories [data-toggle="tooltip"]').tooltip();
+                });
+            </script>
+        </div>
+    </section>
+{% endif %}

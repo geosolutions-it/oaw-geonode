@@ -1,0 +1,11 @@
+{% extends "index.html" %}
+{% load i18n %}
+{% load base_tags %}
+{% block content %}
+    <section id="showcase" class="gn-container gn-container-home gn-container-home-variant">
+        {% include "oaw_geonode/home-facets.html" %}
+    </section>
+    {% get_visibile_resources request.user %}
+{% endblock %}
+{% block container %}{% endblock %}
+{% block ms_scripts %}{% endblock %}
