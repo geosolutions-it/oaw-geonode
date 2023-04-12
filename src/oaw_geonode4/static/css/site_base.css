@@ -1,0 +1,114 @@
+#gn-topbar .dropdown-menu {
+    max-height: 500px;
+    overflow: auto;
+}
+.gn-homepage {
+    padding-bottom: 60px;
+}
+
+/* home style */
+.gn-content .gn-content-title {
+    font-weight: 600;
+    margin: 0 1rem;
+    margin-bottom: 3rem;
+    font-size: 1.3rem;
+    text-align: center;
+}
+.gn-container + .gn-container,
+.gn-container + #container {
+    border-top: 1px solid var(--gn-main-border-color,#ddd);
+}
+.gn-container-home {
+    padding: 2rem 0;
+}
+.gn-container-home-variant {
+    background-color: #f2f0f0;
+    background-color: var(--gn-main-variant-bg,#f2f0f0);
+    color: #000;
+    color: var(--gn-main-variant-color,#000);
+}
+
+/* end home style */
+
+/* carousel style */
+.carousel .carousel-header {
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    text-align: center;
+    text-shadow: 0 1px 2px rgba(0,0,0,.6);
+    padding: 0 16px;
+    font-size: 3.0625rem;
+    padding-top: 2rem;
+}
+.jumbotron .carousel .carousel-caption h3,
+.jumbotron .carousel .carousel-caption p {
+    font-size: 2rem;
+}
+.jumbotron a {
+    color: var(--gn-jumbotron-color,#fff);
+    font-weight: bold;
+}
+.jumbotron a:hover {
+    color: var(--gn-jumbotron-color,#fff);
+    text-decoration: underline;
+}
+.carousel .carousel-inner .item {
+    background-color: rgb(156, 156, 156);
+}
+.carousel .carousel-inner .item img {
+    mix-blend-mode: multiply;
+}
+@media screen and (max-width: 768px) {
+    .carousel .carousel-header {
+        font-size: 2.5rem;
+    }
+    .jumbotron .carousel .carousel-caption h3 {
+        font-size: 1.25rem;
+    }
+    .jumbotron .carousel .carousel-caption p {
+        font-size: 1.3rem;
+    }
+    .msgapi .gn-hero .gn-carousel .carousel-inner .item {
+        min-height: 400px;
+    }
+}
+/* end carousel style */
+
+/* iso categories style */
+.iso-categories {
+    width: 100%;
+    text-align: center;
+}
+.iso-categories-list {
+    display: flex;
+    list-style: none;
+    justify-content: center;
+    padding: 0;
+    flex-wrap: wrap;
+}
+.iso-categories-item {
+    margin: 16px;
+    width: 100px;
+    font-size: 0.8rem;
+}
+.iso-categories-item .category {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+.iso-categories-item .category {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+.iso-categories-item .fa {
+    position: relative;
+}
+.iso-categories-item .badge {
+    position: absolute;
+    right: 0;
+    top: 0;
+    transform: translate(50%, -50%);
+}
+/* end iso categories style */
