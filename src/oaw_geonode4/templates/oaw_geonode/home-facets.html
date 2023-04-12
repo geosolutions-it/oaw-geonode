@@ -1,0 +1,70 @@
+{% load i18n %}
+{% load base_tags %}
+<div class="home-facets container">
+    {% with facet_type='home' %}
+    {% facets as facets %}
+    <div class="home-facets-list row text-center">
+        <div class="col-md-3 col-sm-6">
+            <a href="/catalogue/#/search/filter/?f=dataset">
+                <div><i class="fa fa-database fa-4x"></i></div>
+                <h3>
+                    {{ facets.dataset|default:_("No") }} {% blocktrans count counter=facets.dataset %}Dataset{% plural %}Datasets{% endblocktrans %}
+                </h3>
+            </a>
+            <p>
+                {% trans "Click to search for geospatial data published by other users, organizations and public sources. Download data in standard formats." %}
+            </p>
+            <p>
+                <a class="btn btn-primary" href="/catalogue/#/search/filter/?f=dataset" role="button">{% trans "Explore datasets" %}</a>
+            </p>
+            <br/>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <a href="/catalogue/#/search/filter/?f=map">
+                <div><i class="fa fa-map fa-4x"></i></div>
+                <h3>
+                    {{ facets.map|default:_("No") }} {% blocktrans count counter=facets.map %}Map{% plural %}Maps{% endblocktrans %}
+                </h3>
+            </a>
+            <p>
+                {% trans "Data is available for browsing, aggregating and styling to generate maps which can be saved, downloaded, shared publicly or restricted to specify users only." %}
+            </p>
+            <p>
+                <a class="btn btn-primary" href="/catalogue/#/search/filter/?f=map" role="button">{% trans "Explore maps" %}</a>
+            </p>
+            <br/>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <a href="/catalogue/#/search/filter/?f=document">
+                <div><i class="fa fa-file fa-4x"></i></div>
+                <h3>
+                    {{ facets.document|default:_("No") }} {% blocktrans count counter=facets.document %}Document{% plural %}Documents{% endblocktrans %}
+                </h3>
+            </a>
+            <p>
+                {% trans "As for the layers and maps GeoNode allows to publish tabular and text data, manage theirs metadata and associated documents." %}
+            </p>
+            <p>
+                <a class="btn btn-primary" href="/catalogue/#/search/filter/?f=document" role="button">{% trans "Explore documents" %}</a>
+            </p>
+            <br/>
+        </div>
+
+        <div class="col-md-3 col-sm-6">
+            <a href="{% url 'profile_browse' %}">
+                <div><i class="fa fa-user fa-4x"></i></div>
+                <h3>
+                    {{ facets.user|default:_("No") }} {% blocktrans count counter=facets.user %}User{% plural %}Users{% endblocktrans %}
+                </h3>
+            </a>
+            <p>
+                {% trans "Geonode allows registered users to easily upload geospatial data and various documents in several formats." %}
+            </p>
+            <p>
+                <a class="btn btn-primary" href="{% url "profile_browse" %}" role="button">{% trans "See users" %}</a>
+            </p>
+            <br/>
+        </div>
+    </div>
+    {% endwith %}
+</div>
