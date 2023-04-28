@@ -19,12 +19,11 @@
 #########################################################################
 
 from geonode.urls import urlpatterns
+from django.conf.urls import url
+from .view import dataset_redirect
 
-'''
 # You can register your own urlpatterns here
 urlpatterns = [
-    url(r'^/?$',
-        homepage,
-        name='home'),
- ] + urlpatterns
-'''
+    url(r'^layers/(?P<layername>[^/]*)$', dataset_redirect, name='dataset_url_redirect'),
+] + urlpatterns
+
